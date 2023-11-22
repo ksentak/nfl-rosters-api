@@ -1,0 +1,21 @@
+{
+  "name": "nfl-rosters-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/app.js",
+  "scripts": {
+    "build": "tsc",
+    "get-rosters": "npm run build && node ./dist/scripts/getRosters.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.4",
+    "typescript": "^5.3.2"
+  }
+}
