@@ -32,10 +32,39 @@ const fetchRoster = async (id: string) => {
 
 // First combine arrays of offense, defense, and special teams
 // Then extract only the data we want
-const transformRoster = (rawRoster) => {};
+const transformRoster = (
+  rawRoster: any[],
+  teamId: string,
+  teamName: string,
+) => {
+  // Takes in array of athletes
+  const transformedRoster = rawRoster.map((positionGroup) => {
+    return positionGroup.items.map(
+      (player: { position: any; experience: any; college: any }) => {
+        return {
+          id: _.get(player, 'id'),
+          number: _.get(player, 'jersey', 'N/A'),
+          positionGroup: _.get(positionGroup, 'position'),
+          first_name: _.get(player, 'firstName'),
+          last_name: _.get(player, 'lastName'),
+          position: _.lowerCase(_.get(player.position, 'abbreviation')),
+          height: _.get(player, 'displayHeight'),
+          weight: _.toString(_.get(player, 'weight')),
+          age: _.toString(_.get(player, 'age')),
+          years_pro: _.toString(_.get(player.experience, 'years')),
+          college: _.get(player.college, 'shortName', 'N/A'),
+          teamId,
+          teamName,
+        };
+      },
+    );
+  });
+
+  return transformedRoster;
+};
 
 // Writes roster to a json file
-const writeRosterToJsonFile = async (id, name, officialRoster) => {};
+const writeRosterToJsonFile = async (officialRoster) => {};
 
 const generateOfficialRosterJson = async (team: {
   id: string;
@@ -44,8 +73,8 @@ const generateOfficialRosterJson = async (team: {
   const { id, name } = team;
 
   const rawRosterData = await fetchRoster(id);
-  const officialRoster = await transformRoster(rawRosterData);
-  await writeRosterToJsonFile(id, name, officialRoster);
+  const officialRoster = await transformRoster(rawRosterData, id, name);
+  await writeRosterToJsonFile(officialRoster);
 };
 
 const sleep = (ms: number) => {
